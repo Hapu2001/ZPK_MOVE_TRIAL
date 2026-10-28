@@ -1,0 +1,27 @@
+projection;
+strict ( 2 );
+use draft;
+
+define behavior for ZC_PURCHASEORDER_2 alias PurchaseOrder
+{
+  use create;
+  use update;
+  use delete;
+
+  use action Edit;
+  use action Activate;
+  use action Discard;
+  use action Resume;
+  use action Prepare;
+//thêm để expose
+use action rejectPurchaseOrder;
+  use association _Items { create; with draft; }
+}
+
+define behavior for ZC_POITEM_2 alias PoItem
+{
+  use update;
+  use delete;
+
+  use association _Header;
+}

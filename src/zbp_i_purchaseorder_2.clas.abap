@@ -1,0 +1,5 @@
+CLASS zbp_i_purchaseorder_2 DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF zi_purchaseorder_2.
+ENDCLASS.
+
+CLASS zbp_i_purchaseorder_2 IMPLEMENTATION.
+ENDCLASS.

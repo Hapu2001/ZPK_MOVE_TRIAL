@@ -1,0 +1,5 @@
+@EndUserText.label: 'Service Definition for PO'
+define service ZSD_PURCHASEORDER_2 {
+  expose ZC_PURCHASEORDER_2 as PurchaseOrder;
+  expose ZC_POITEM_2        as PoItem;
+}

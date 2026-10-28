@@ -1,0 +1,75 @@
+managed implementation in class zbp_i_purchaseorder_2 unique;
+
+strict ( 2 );
+
+with draft;
+
+define behavior for ZI_PURCHASEORDER_2 alias PurchaseOrder
+persistent table zpurchaseorder_2
+draft table ZURCH_D_PO_2
+lock master total etag PoId
+authorization master ( none )
+{
+  create;
+  update;
+  delete;
+
+  // Cho phép nhập PoId lúc tạo mới (Create), nhưng khi đã lưu xong (Update) thì khóa lại
+  field ( mandatory : create, readonly : update ) PoId;
+  field ( readonly : create ) VendorId;
+
+  association _Items { create; with draft; }
+  // thêm action
+action rejectPurchaseOrder parameter ZI_PO_REJECT_PARAM_2
+                            result [1] $self;
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare;
+
+  mapping for zpurchaseorder_2
+  {
+    PoId          = po_id;
+    VendorId      = vendor_id;
+    PurchOrg      = purch_org;
+    CurrencyCode  = currency_code;
+    TotalAmount   = total_amount;
+    Status        = status;
+    PoDate        = po_date;
+    DeliveryDate  = delivery_date;
+    DiscountPct   = discount_pct;
+  }
+}
+
+define behavior for ZI_POITEM_2 alias PoItem
+persistent table zpoitem_2
+draft table ZURCH_D_POI_2
+lock dependent by _Header
+authorization dependent by _Header
+etag master LastChangedAt
+{
+  update;
+  delete;
+
+  field ( readonly ) PoId;
+  field ( mandatory : create, readonly : update ) ItemId;
+  field ( readonly ) LastChangedAt;
+
+  association _Header { with draft; }
+
+  mapping for zpoitem_2
+  {
+    PoId          = po_id;
+    ItemId        = item_id;
+    MaterialId    = material_id;
+    Quantity      = quantity;
+    UnitOfMeasure = unit_of_measure;
+    CurrencyCode  = currency_code;
+    UnitPrice     = unit_price;
+    NetValue      = net_value;
+    DeliveryDate  = delivery_date;
+    Plant         = plant;
+    LastChangedAt = last_changed_at;
+  }
+}
